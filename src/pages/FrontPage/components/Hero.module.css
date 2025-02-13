@@ -1,0 +1,5 @@
+.afterHeroText::after {
+    content: "";
+    display: block;
+    height: 12px;
+  }
