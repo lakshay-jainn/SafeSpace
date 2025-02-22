@@ -1,15 +1,11 @@
-import { Link, useNavigate } from "react-router-dom";
+
 import { useState } from "react";
 
 import { FormEvent } from "react";
 import styles from "../loginregister.module.css";
-import axios from "axios";
-import useGlobalAuth from "@/Auth/useGlobalAuth";
 
-function Login() {
-  const {Login} = useGlobalAuth()!;
+function LoginComponent({actionCallback,setOnLoginComponent,Login} : {actionCallback : () => unknown,setOnLoginComponent: (value:boolean)=>void,Login: (token:string)=>void}) {
 
-  const navigate = useNavigate()
   const BACKEND_URL = "http://localhost:8080/api/v1/user/signin";
 
 
@@ -45,7 +41,8 @@ function Login() {
       if (response.ok){
         const token = data.token;
         Login(token);
-        navigate("/");
+        actionCallback();
+        
       }else{
         throw new Error(data.message);
       }
@@ -62,7 +59,7 @@ function Login() {
   }
 
   return (
-    <div className={styles["mainwrapper"]}>
+    // <div className={styles["mainwrapper"]}>
       <div className={styles["wrapper"]}>
         <div className={styles["title-text"]}>
           <div
@@ -128,14 +125,14 @@ function Login() {
                 <input type="submit" value="Login" />
               </div>
               <div className={styles["signup-link"]}>
-                Not a member? <Link to="/auth/register">Signup now</Link>
+                Not a member? <button onClick={()=>setOnLoginComponent(false)}><a className="cursor-pointer">Signup now</a></button>
               </div>
             </form>
           </div>
         </div>
       </div>
-    </div>
+    // </div>
   );
 }
 
-export default Login;
+export default LoginComponent;

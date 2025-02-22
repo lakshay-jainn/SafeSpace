@@ -7,6 +7,7 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
+  console.log('niggeshwar');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -16,7 +17,7 @@ axiosClient.interceptors.request.use((config) => {
 axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.data.token === false ) {
+    if (!error.response?.data.token ) {
       logout(); // Trigger logout on unauthorized access
     }
     return Promise.reject(error);

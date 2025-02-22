@@ -1,11 +1,11 @@
 import { Route } from 'react-router-dom';
-import Login from '../pages/loginpage/Login';
-import Register from '../pages/registerpage/Register';
-import UnprotectedRoute from '../components/routes/UnprotectedRoute'
+import UnprotectedRoute from '../components/routes/UnprotectedRoute';
+import LoginRegisterPage from '@/pages/login-register/LoginRegisterPage'
 
-export const AuthRoutes = (
-  <Route path="/auth" element={<UnprotectedRoute />}>
-    <Route path="login" element={<Login />} />
-    <Route path="register" element={<Register />} />
+const AuthRoutes = (
+  <Route path="auth" element={<UnprotectedRoute />}>
+    <Route index element={<LoginRegisterPage />} />
   </Route>
-);
+)
+
+export default AuthRoutes;

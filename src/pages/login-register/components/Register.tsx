@@ -1,13 +1,11 @@
 
-import {Link , useNavigate} from "react-router-dom";
+
 import {useState} from 'react';
 import { FormEvent } from 'react';
 import styles from '../loginregister.module.css';
-import useGlobalAuth from "@/Auth/useGlobalAuth";
-function Register() {
-  const {Login} = useGlobalAuth();
+function RegisterComponent({actionCallback,setOnLoginComponent,Login} : {actionCallback: () => unknown,setOnLoginComponent: (value:boolean)=>void,Login: (token:string)=>void}) {
+  
 	const [isAlumni, setIsAlumni] = useState(true);
-  const navigate = useNavigate()
 	const handleToggle = (isAlumniSelected: boolean) => {
 		setIsAlumni(isAlumniSelected);
 	  };
@@ -20,7 +18,7 @@ function Register() {
       const email=formData.get('email');
       const password=formData.get('password');
       const confirmPassword=formData.get('confirmPassword');
-
+      console.log(confirmPassword)
       // if (password === confirmPassword){
       //   console.table([email,password,confirmPassword,isAlumni]);
       // }
@@ -52,7 +50,8 @@ function Register() {
         if (response.ok){
           const token = data.token;
           Login(token)
-          navigate("/")
+          actionCallback()
+          
         }
         else{
           throw new Error(data.message)
@@ -71,7 +70,7 @@ function Register() {
 	
 	 
   return (
-    <div className={styles["mainwrapper"]}>
+    // <div className={styles["mainwrapper"]}>
       <div className={styles["wrapper"]}>
         <div className={styles["title-text"]}>
           <div style={{
@@ -131,7 +130,7 @@ function Register() {
                 <input type="submit" value="Signup" />
               </div>
               <div className={styles["signup-link"]}>
-                Already registered? <Link to='/auth/login'>Login here!</Link>
+                Already registered? <button onClick={()=> setOnLoginComponent(true)}><a className='cursor-pointer'>Login here!</a></button>
               </div>
             </form>
 
@@ -140,8 +139,8 @@ function Register() {
       
 	  </div>
 
-    </div>
+    // </div>
   );
 }
 
-export default Register;
+export default RegisterComponent;

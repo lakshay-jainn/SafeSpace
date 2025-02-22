@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card,  CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 // import { Separator } from "@/components/ui/separator"
-import { MessageCircle, Heart, Send, ChevronLeft, ThumbsUp } from "lucide-react"
+import { MessageCircle, Heart, Send, ThumbsUp } from "lucide-react"
 import { LikePost,AddComment,FetchComments } from "@/api/services/feedsService"
 
 import { z } from "zod"

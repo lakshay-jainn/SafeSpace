@@ -16,8 +16,9 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form"
-import useGlobalAuth from "@/Auth/useGlobalAuth"
+
 import {  useForm ,UseFormReturn} from "react-hook-form"
+import useGlobalAuth from "@/Auth/useGlobalAuth"
 
 
 const messageSchema = z.object({
@@ -166,7 +167,7 @@ export function SinglePost({
   isLiked: initialIsLiked,
   comments: initialComments,
 }: PostProps) {
-  const {handleProtectedAction} = useGlobalAuth()
+  const {handleProtectedAction} =useGlobalAuth()
   const [comments, setComments] = useState<Comment[]>(initialComments)
   const [showAllComments, setShowAllComments] = useState(false)
   const [isCommentsExpanded, setIsCommentsExpanded] = useState(false)
@@ -174,6 +175,7 @@ export function SinglePost({
   const [isLiked, setIsLiked] = useState(initialIsLiked)
   const [sortBy, setSortBy] = useState<"recent" | "likes">("recent")
   const [skipComments, setSkipComments] = useState(0);
+  
   const lastTouchTimeRef = useRef<number>(0);
   const isTextOnly = !image
   const form = useForm<AddMessageValues>({
@@ -353,7 +355,7 @@ export function SinglePost({
                   <div className="flex items-center gap-5">
 
 
-                    <Button variant="ghost" size="icon" onClick={()=> handleProtectedAction(toggleComments)} className="hover:bg-inherit w-full h-full text-start">
+                    <Button variant="ghost" size="icon" onClick={()=>handleProtectedAction(toggleComments)} className="hover:bg-inherit w-full h-full text-start">
                       <MessageSquareText style={{height:"2rem",width:"2rem"}}  strokeWidth={1} className="" />
                       <span className="text-lg font-semibold">80</span>
                     </Button>
@@ -362,7 +364,7 @@ export function SinglePost({
                     className="hover:bg-inherit w-full h-full text-start"
                       variant="ghost"
                       size="icon"
-                      onClick={()=> handleProtectedAction(toggleLike) }
+                      onClick={()=>handleProtectedAction(toggleLike)}
                       aria-label={isLiked ? "Unlike" : "Like"}
                       aria-pressed={isLiked}
                     >
@@ -384,7 +386,7 @@ export function SinglePost({
     </Card>
     {showAllComments &&  (
       <>
-      <AddCommentElement form={form} handleAddComment={handleAddComment} />
+      <AddCommentElement form={form} handleAddComment={()=>handleProtectedAction(handleAddComment)} />
 
                 <div className="px-10">
                   <div className="flex justify-between items-center mb-4">

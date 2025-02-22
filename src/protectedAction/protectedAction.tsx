@@ -1,12 +1,11 @@
 // ProtectedAction.js
 import useGlobalAuth from "@/Auth/useGlobalAuth";
 const ProtectedAction = ({ children }:{children:any}) => {
-    const { openLogin,isLoggedIn} = useGlobalAuth()!;
+    const {isLoggedIn} = useGlobalAuth()!;
     const handleCheck=(event:any)=>{
         if (!isLoggedIn){
             event.preventDefault();
             event.stopPropagation();
-            openLogin();
         }
     }
     return (

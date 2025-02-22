@@ -1,6 +1,6 @@
 
 import { useState,useEffect } from "react";
-import axiosClient from "../axios/axiosClient";
+import publicAxiosClient from "../axios/publicAxiosClient";
 import {InitialFeedsResponse } from "../types/FeedsTypes";
 import { handleApiError } from "../utils/apiUtils";
 export default function useFetchFeeds(){
@@ -13,7 +13,7 @@ export default function useFetchFeeds(){
     useEffect(()=>{
         const fetchFeeds = async() =>{
             try{
-            const response=await axiosClient.get('/posts/posts')
+            const response=await publicAxiosClient.get('/posts/posts')
             
             const data=response.data;
 

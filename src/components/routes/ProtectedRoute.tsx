@@ -1,15 +1,15 @@
-import { AuthContext } from "@/Auth/AuthContext";
-import { useContext} from "react";
+import useGlobalAuth from "@/Auth/useGlobalAuth";
+
 import { Outlet,Navigate } from "react-router-dom";
 function ProtectedRoute(){
     
-    const {isLoggedIn}=useContext(AuthContext)!;
+    const {isLoggedIn}=useGlobalAuth()
 
-    if (isLoggedIn){
+        if (!isLoggedIn){
+            return (<Navigate to='/auth/login' replace />)
+        }
         return (<Outlet />)
 
-    }else{
-        return(<Navigate to='/auth/login' replace />)
-    }
+    
 }
 export default ProtectedRoute

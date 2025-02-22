@@ -1,14 +1,15 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
 import { setLogout } from "@/api/axios/AuthBridge"
+import { Dialog,DialogContent,DialogTitle,DialogDescription } from "@/components/ui/dialog";
+import LoginRegisterToggle from "@/pages/login-register/toggle/LoginRegisterToggle";
 // Define the type for the context value
 type AuthContextType = {
   token: string | null | boolean;
   isLoggedIn: boolean;
   Login : (token : string )=> void;
   Logout: ()=>void;
-  openLogin: ()=>void;
-  closeLogin: ()=>void;
-  isLoginOpen: boolean;
+  handleProtectedAction: (event: any) => void;
+
 };
 
 // Create the context with an initial value of `null` or a default object
@@ -22,7 +23,8 @@ type AuthProviderProps = {
 function AuthProvider({ children }: AuthProviderProps) {
   const [token, setToken] = useState<string | null | boolean>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
+  const [actionCallbackFunction, setActionCallbackFunction] = useState<() => void>(() => {});
   // Check for token in localStorage on component mount
   useEffect(() => {
     const storedToken= localStorage.getItem("token");
@@ -45,20 +47,46 @@ function AuthProvider({ children }: AuthProviderProps) {
       localStorage.removeItem("token")
       setToken(false)
       setIsLoggedIn(false)
+      openLoginPopup()
     }
   const Login = (token : string) => {
       localStorage.setItem("token",token)
       setIsLoggedIn(true)
       setToken(token)
+      closeLoginPopup();  
+      
     }
-  const openLogin = () => setIsLoginOpen(true);
-  const closeLogin = () => setIsLoginOpen(false);
+  const openLoginPopup = () => setIsLoginPopupOpen(true);
+  const closeLoginPopup = () => setIsLoginPopupOpen(false);
+  
+  const handleProtectedAction = (actionCallback : any) => {
+    if (!isLoggedIn){
+        setActionCallbackFunction(()  => actionCallback);
+        openLoginPopup();
+    } 
+    else{
+        actionCallback();
+    }
+  }
+  const LoginPopup = () => {
+    return (
+      <Dialog open={isLoginPopupOpen} onOpenChange={closeLoginPopup}>
+        
+        <DialogContent>
 
+          <DialogTitle>Login or Register</DialogTitle>
+          <LoginRegisterToggle actionCallback={actionCallbackFunction}  />
+          <DialogDescription>This is a login and register popup dialog</DialogDescription>
+        </DialogContent>
+      </Dialog>
+  );
+  }
   if (token !== null){
 
   return (
-    <AuthContext.Provider value={{ token, isLoggedIn , Login, Logout,openLogin,closeLogin,isLoginOpen}}>
+    <AuthContext.Provider value={{ token, isLoggedIn , Login, Logout , handleProtectedAction }}>
       {children}
+      <LoginPopup />
     </AuthContext.Provider>
   );
 }}

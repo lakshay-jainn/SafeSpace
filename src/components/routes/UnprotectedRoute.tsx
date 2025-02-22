@@ -1,15 +1,14 @@
-import { AuthContext } from "@/Auth/AuthContext";
-import { useContext} from "react";
+import useGlobalAuth  from "@/Auth/useGlobalAuth";
 import { Outlet,Navigate } from "react-router-dom";
 function UnprotectedRoute(){
     
-    const {isLoggedIn}=useContext(AuthContext)!;
+    const {isLoggedIn}=useGlobalAuth()!;
     if (!isLoggedIn){
         return (<Outlet />)
 
     }else{
         
-        return(<Navigate to='/' replace />)
+        return(<Navigate to='/feeds' replace />)
     }
 }
 export default UnprotectedRoute;

@@ -1,5 +1,5 @@
 // Sidebar.jsx
-import React from 'react';
+
 import { NavLink } from 'react-router-dom';
 import { Home, Compass, Bell, Mail, User, Settings } from 'lucide-react';
 
