@@ -1,12 +1,13 @@
 import useGlobalAuth from "@/Auth/useGlobalAuth";
-
-import { Outlet,Navigate } from "react-router-dom";
+import { Outlet,Navigate,useLocation } from "react-router-dom";
 function ProtectedRoute(){
     
     const {isLoggedIn}=useGlobalAuth()
-
+    const location = useLocation()
+    
         if (!isLoggedIn){
-            return (<Navigate to='/auth/login' replace />)
+            console.log('redirecting to auth')
+            return (<Navigate to='/auth' replace state={{ from: location }} />)
         }
         return (<Outlet />)
 

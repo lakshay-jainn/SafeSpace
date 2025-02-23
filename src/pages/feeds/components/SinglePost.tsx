@@ -1,4 +1,5 @@
-import { useState,useMemo,memo,useRef,useCallback } from "react"
+import { useState,useMemo,memo,useEffect } from "react"
+import { useLocation,useNavigate } from "react-router-dom"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card,  CardHeader } from "@/components/ui/card"
@@ -6,8 +7,8 @@ import { Input } from "@/components/ui/input"
 // import { Separator } from "@/components/ui/separator"
 import { Heart, Send, ThumbsUp,MessageSquareText } from "lucide-react"
 import { LikePost,AddComment,FetchComments } from "@/api/services/feedsService"
-
-import { z } from "zod"
+import {toast} from 'sonner'
+import {   z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
   Form,
@@ -16,9 +17,8 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form"
-
-import {  useForm ,UseFormReturn} from "react-hook-form"
 import useGlobalAuth from "@/Auth/useGlobalAuth"
+import {  useForm ,UseFormReturn} from "react-hook-form"
 
 
 const messageSchema = z.object({
@@ -167,16 +167,19 @@ export function SinglePost({
   isLiked: initialIsLiked,
   comments: initialComments,
 }: PostProps) {
-  const {handleProtectedAction} =useGlobalAuth()
+  const location = useLocation()
+  const navigate=useNavigate()
+  const {handleProtectedAction} = useGlobalAuth()
   const [comments, setComments] = useState<Comment[]>(initialComments)
   const [showAllComments, setShowAllComments] = useState(false)
   const [isCommentsExpanded, setIsCommentsExpanded] = useState(false)
   const [likes, setLikes] = useState(initialLikes)
   const [isLiked, setIsLiked] = useState(initialIsLiked)
+  const [SuccessfullIsLike, setSuccessfullIsLike] = useState(initialIsLiked)
+  const [pendingLike, setPendingLike] = useState<boolean | null>(null)
   const [sortBy, setSortBy] = useState<"recent" | "likes">("recent")
   const [skipComments, setSkipComments] = useState(0);
-  
-  const lastTouchTimeRef = useRef<number>(0);
+  // const lastTouchTimeRef = useRef<number>(0);
   const isTextOnly = !image
   const form = useForm<AddMessageValues>({
     resolver: zodResolver(messageSchema),
@@ -260,32 +263,57 @@ export function SinglePost({
 
   }
 
-   const toggleLike = async () => {
+  useEffect(() => {
+    if (pendingLike === null) return;
+    const timeout = setTimeout(async () => {
+      if (isLiked !== SuccessfullIsLike) {
+        await LikeUpdate();
+      }
+    },1000);
+    return () => clearTimeout(timeout);
+  }, [pendingLike]);
+
+   const toggleLike = () =>{
+    setPendingLike((prev) => (prev === null || prev===false) ? true : false)
+    setIsLiked((prev) => !prev)
+    setLikes((prevLikes) => (isLiked ? prevLikes - 1 : prevLikes + 1))
+    
+    
+   }
+   const LikeUpdate = async () => {
     try{
       const responseData= await LikePost({postId:id});
-
-      setIsLiked(responseData.isLiked)
-      setLikes((prevLikes) => (isLiked ? prevLikes - 1 : prevLikes + 1))
+      setSuccessfullIsLike(responseData.isLiked)
+      console.log('like updated',responseData.isLiked)
     }
     catch{
-      console.error('some error occured in liking the post')
+      toast.error('some error occured in liking the post')
+      setIsLiked((prev) => !prev)
+      setLikes((prevLikes) => (isLiked ? prevLikes - 1 : prevLikes + 1))
     }
-    
-
     
   }
-  const handleDoubleClick = useCallback(() => {
-    toggleLike();
-  }, [toggleLike]);
 
-  const handleTouchEnd = useCallback(() => {
-    const now = Date.now();
-    // If two taps occur within 300ms, register as a double tap
-    if (now - lastTouchTimeRef.current < 300) {
-      toggleLike();
+
+  const PostClick=()=>{
+    if (location.pathname === 'feed/'+id) {
+      return;
     }
-    lastTouchTimeRef.current = now;
-  }, [toggleLike]);
+    handleProtectedAction(()=>navigate(`/feed/${id}`))
+
+  }
+  // const handleDoubleClick = useCallback(() => {
+  //   toggleLike();
+  // }, [toggleLike]);
+
+  // const handleTouchEnd = useCallback(() => {
+  //   const now = Date.now();
+  //   // If two taps occur within 300ms, register as a double tap
+  //   if (now - lastTouchTimeRef.current < 300) {
+  //     toggleLike();
+  //   }
+  //   lastTouchTimeRef.current = now;
+  // }, [toggleLike]);
 
   const toggleCommentLike = (commentId: string) => {
     setComments(
@@ -310,7 +338,8 @@ export function SinglePost({
   return (
     <>
     {/*max-w-[1095px]*/}
-    <Card onDoubleClick={handleDoubleClick} onTouchEnd={handleTouchEnd} className="w-full max-w-2xl mx-auto rounded-[2rem]">
+    {/* onDoubleClick={handleDoubleClick} onTouchEnd={handleTouchEnd} */}
+    <Card  className="w-full max-w-2xl mx-auto rounded-[2rem] gradient-border">
       <CardHeader className="flex flex-row items-center gap-4 border-b pb-4 space-y-0">
       
         <Avatar>
@@ -334,6 +363,10 @@ export function SinglePost({
         </div>
       </CardHeader>
       <div className={`flex flex-col h-full lg:flex-col `}>
+        <div className="cursor-pointer" onClick={PostClick} >
+        <div className="p-4">
+            <p className="text-xl mb-4">{caption}</p>
+          </div>
         {!isTextOnly && (
           <div className={`content-center `}>
           <img
@@ -345,9 +378,9 @@ export function SinglePost({
           />
         </div>
         ) }
-          <div className="p-4">
-            <p className="text-xl mb-4">{caption}</p>
-          </div>
+        </div>
+      
+          
         
         
         <div className="p-4 border-t">
@@ -355,20 +388,20 @@ export function SinglePost({
                   <div className="flex items-center gap-5">
 
 
-                    <Button variant="ghost" size="icon" onClick={()=>handleProtectedAction(toggleComments)} className="hover:bg-inherit w-full h-full text-start">
+                    <Button variant="ghost" size="icon" onClick={PostClick} className="hover:bg-inherit w-full h-full text-start cursor-pointer">
                       <MessageSquareText style={{height:"2rem",width:"2rem"}}  strokeWidth={1} className="" />
                       <span className="text-lg font-semibold">80</span>
                     </Button>
                 
                     <Button
-                    className="hover:bg-inherit w-full h-full text-start"
+                    className="hover:bg-inherit w-full h-full text-start cursor-pointer"
                       variant="ghost"
                       size="icon"
-                      onClick={()=>handleProtectedAction(toggleLike)}
+                      onClick={()=> handleProtectedAction(toggleLike) }
                       aria-label={isLiked ? "Unlike" : "Like"}
                       aria-pressed={isLiked}
                     >
-                      <Heart style={{height:"2rem",width:"2rem"}} strokeWidth={1} className={` transition-transform ${isLiked ? "fill-red-500 text-red-500 animate-smooth-bounce " : ""}`} />
+                      <Heart style={{height:"2rem",width:"2rem"}} strokeWidth={1} className={` ${isLiked ? "animate-smooth-bounce fill-red-500 text-red-500 " : ""}`} />
                       <span className="text-lg font-semibold  ">{likes}</span>
                     </Button>
             
@@ -386,7 +419,7 @@ export function SinglePost({
     </Card>
     {showAllComments &&  (
       <>
-      <AddCommentElement form={form} handleAddComment={()=>handleProtectedAction(handleAddComment)} />
+      <AddCommentElement form={form} handleAddComment={handleAddComment} />
 
                 <div className="px-10">
                   <div className="flex justify-between items-center mb-4">

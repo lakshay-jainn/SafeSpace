@@ -45,3 +45,12 @@ export interface profileDetailsPayload {
     internships?:String[],
     urls?:String[]    
 }
+
+
+
+export interface postUploadPayload {
+    //common
+    content?:string,
+    caption?:string,
+    communityId?:string,
+}

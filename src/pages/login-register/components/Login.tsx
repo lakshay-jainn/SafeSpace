@@ -1,111 +1,53 @@
 
-import { useState } from "react";
 
 import { FormEvent } from "react";
 import styles from "../loginregister.module.css";
-
+import { SigninAPI } from "@/api/services/authService";
+import { handleApiError } from "@/api/utils/apiUtils";
+import { toast } from "sonner";
 function LoginComponent({actionCallback,setOnLoginComponent,Login} : {actionCallback : () => unknown,setOnLoginComponent: (value:boolean)=>void,Login: (token:string)=>void}) {
-
-  const BACKEND_URL = "http://localhost:8080/api/v1/user/signin";
-
-
-  const [isAlumni, setIsAlumni] = useState(true);
-  const handleToggle = (isAlumniSelected: boolean) => {
-    setIsAlumni(isAlumniSelected);
-  };
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-    const email = formData.get("email");
+    const username = formData.get("username");
     const password = formData.get("password");
 
-    console.table([email, password, isAlumni]);
-
     try {
-      const response= await fetch(BACKEND_URL, {
-        method:"POST",
-        headers:{
-          "Content-Type": "application/json", 
-        },
-        body:JSON.stringify({
-
-          email:email,
-          password:password,
-          isAlumni:isAlumni,
-
-        })});
-      const data=await response.json();
-
-      if (response.ok){
-        const token = data.token;
-        Login(token);
-        actionCallback();
-        
-      }else{
-        throw new Error(data.message);
-      }
-      
-    } catch (e) {
-      if (e  instanceof Error){
-        console.log(e.message)
-      }
-      else{
-        console.log(e);
-      }
+      const responseData= await SigninAPI({
+        username:username,
+        password:password
+      });
+      const token = responseData.token;
+      Login(token);
+      actionCallback();
+      toast.success("Login Successful");
+      } catch (error) {
+        const errorData=handleApiError(error);
+        toast.error(errorData.message)
     }
     
   }
 
   return (
-    // <div className={styles["mainwrapper"]}>
-      <div className={styles["wrapper"]}>
-        <div className={styles["title-text"]}>
-          <div
-            style={{
-              marginLeft: isAlumni ? "0" : "-50%",
-            }}
-            className={`${styles["title"]} ${styles["alumni"]}`}
-          >
-            Alumni Login
-          </div>
-          <div className={`${styles["title"]} ${styles["student"]}`}>
-            Student Login
-          </div>
+
+      <div className={`${styles["wrapper"]} `}>
+        <div className='text-center'>
+          <div className={`${styles["title"]} flex flex-col items-center`}>
+              <img className='h-15 w-15' src="safespace.png" alt="" />
+              SafeSpace
+            </div>
         </div>
         <div className={styles["form-container"]}>
-          <div className={styles["slide-controls"]}>
-            <button
-              onClick={() => handleToggle(true)}
-              className={`${styles["slide"]} ${styles["alumni"]} ${
-                isAlumni ? styles["active"] : styles["not-active"]
-              }`}
-            >
-              Alumni
-            </button>
-            <button
-              onClick={() => handleToggle(false)}
-              className={`${styles["slide"]} ${styles["student"]} ${
-                !isAlumni ? styles["active"] : styles["not-active"]
-              }`}
-            >
-              Student
-            </button>
-            <div
-              className={styles["slider-tab"]}
-              style={{
-                left: isAlumni ? "0" : "50%",
-              }}
-            ></div>
-          </div>
+       
           <div className={styles["form-inner"]}>
             <form onSubmit={onSubmit} className={styles["login"]}>
               <div className={styles["field"]}>
                 <input
                   type="text"
-                  name="email"
-                  placeholder="Email Address"
+                  name="username"
+                  placeholder="Username"
                   required
                 />
               </div>
@@ -121,17 +63,17 @@ function LoginComponent({actionCallback,setOnLoginComponent,Login} : {actionCall
                 <a href="#">Forgot password?</a>
               </div>
               <div className={`${styles["field"]} ${styles["btn"]}`}>
-                <div className={styles["btn-layer"]}></div>
+                <div className={`${styles["btn-layer"]} bg-gradient-to-r from-red-400 to-orange-400 `}></div>
                 <input type="submit" value="Login" />
               </div>
               <div className={styles["signup-link"]}>
-                Not a member? <button onClick={()=>setOnLoginComponent(false)}><a className="cursor-pointer">Signup now</a></button>
+                Not a member? <button onClick={(event)=>{setOnLoginComponent(false);event.preventDefault()}}><a className="cursor-pointer">Signup now</a></button>
               </div>
             </form>
           </div>
         </div>
       </div>
-    // </div>
+  
   );
 }
 

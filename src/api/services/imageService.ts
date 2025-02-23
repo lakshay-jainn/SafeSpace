@@ -3,8 +3,8 @@ import axiosClient from "../axios/axiosClient";
 
 export async function uploadImg(ToFolder:string ,image:any){
     // 1. Get upload signature from backend
-    const { userId,signature, timestamp, folder, cloudName, apiKey } = await axiosClient.post(
-      "/handle-media/generate-upload-signature",
+    const { publicId,signature, timestamp, folder, cloudName, apiKey } = await axiosClient.post(
+      "/generate-upload-signature",
       {
         folder: ToFolder,
        
@@ -18,7 +18,7 @@ export async function uploadImg(ToFolder:string ,image:any){
     formData.append("timestamp", timestamp.toString());
     formData.append("signature", signature);
     formData.append("folder", folder);
-    formData.append("public_id", userId);
+    formData.append("public_id", publicId);
     
 
     const res = await axios.post(

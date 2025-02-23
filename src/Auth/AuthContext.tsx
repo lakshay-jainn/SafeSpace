@@ -9,7 +9,6 @@ type AuthContextType = {
   Login : (token : string )=> void;
   Logout: ()=>void;
   handleProtectedAction: (event: any) => void;
-
 };
 
 // Create the context with an initial value of `null` or a default object
@@ -59,8 +58,9 @@ function AuthProvider({ children }: AuthProviderProps) {
   const openLoginPopup = () => setIsLoginPopupOpen(true);
   const closeLoginPopup = () => setIsLoginPopupOpen(false);
   
-  const handleProtectedAction = (actionCallback : any) => {
+  const handleProtectedAction = (actionCallback : any = () => {}) => {
     if (!isLoggedIn){
+
         setActionCallbackFunction(()  => actionCallback);
         openLoginPopup();
     } 
@@ -73,10 +73,9 @@ function AuthProvider({ children }: AuthProviderProps) {
       <Dialog open={isLoginPopupOpen} onOpenChange={closeLoginPopup}>
         
         <DialogContent>
-
-          <DialogTitle>Login or Register</DialogTitle>
+          <DialogTitle></DialogTitle>
           <LoginRegisterToggle actionCallback={actionCallbackFunction}  />
-          <DialogDescription>This is a login and register popup dialog</DialogDescription>
+          <DialogDescription></DialogDescription>
         </DialogContent>
       </Dialog>
   );
@@ -84,7 +83,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   if (token !== null){
 
   return (
-    <AuthContext.Provider value={{ token, isLoggedIn , Login, Logout , handleProtectedAction }}>
+    <AuthContext.Provider value={{ token, isLoggedIn , Login, Logout , handleProtectedAction}}>
       {children}
       <LoginPopup />
     </AuthContext.Provider>

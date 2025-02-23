@@ -17,7 +17,7 @@ export const NavBar = () => {
             <a href="#creators" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
               Creators
             </a>
-            <Button onClick={()=>navigate('/feeds')} variant="secondary" className="shadow-xs hover:shadow-sm">
+            <Button onClick={()=>navigate('/auth')} variant="secondary" className="shadow-xs hover:shadow-sm">
               Sign In
             </Button>
             <Button  onClick={()=>navigate('/feeds')} className="shadow-md hover:shadow-lg">Go to Feeds!</Button>

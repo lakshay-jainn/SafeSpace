@@ -2,12 +2,12 @@ import axios from 'axios';
 import { logout } from './AuthBridge';
 
 const axiosClient = axios.create({
-  baseURL: 'http://localhost:8080/api/v1',
+  baseURL: 'http://13.233.199.220/api/v1',
 });
 
 axiosClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
-  console.log('niggeshwar');
+  
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -17,7 +17,7 @@ axiosClient.interceptors.request.use((config) => {
 axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (!error.response?.data.token ) {
+    if (error.response?.data.token ===false ) {
       logout(); // Trigger logout on unauthorized access
     }
     return Promise.reject(error);

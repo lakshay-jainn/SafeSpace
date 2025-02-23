@@ -190,3 +190,48 @@
 .animate-smooth-bounce {
   animation: smooth-bounce 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
+.gradient-border {
+  position: relative;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(to right, #f87171, #f59e0b); /* Tailwind's red-400 and orange-400 */
+  z-index: -1;
+  border-radius: inherit; /* Maintain the border radius if any */
+}
+
+.gradient-border::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  background: white; /* Background color of the element */
+  z-index: -1;
+  border-radius: inherit; /* Maintain the border radius if any */
+}
+.input-no-focus-shadow:focus {
+  box-shadow: none; /* Remove shadow */
+  outline: none;    /* Remove default outline */
+  border-color: transparent; /* Optionally remove the border */
+}
+
+::-webkit-scrollbar{
+  width: 0.25rem;
+}
+::-webkit-scrollbar-track{
+  border-radius: 999999px;
+  background-color: var(--color-gray-100);
+}
+::-webkit-scrollbar-thumb{ 
+  border-radius: 999999px;
+  background-color: var(--color-orange-400);
+}
+

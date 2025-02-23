@@ -1,15 +1,11 @@
 
-
-import {useState} from 'react';
+import { SignupAPI } from '@/api/services/authService';
+import { handleApiError } from '@/api/utils/apiUtils';
 import { FormEvent } from 'react';
 import styles from '../loginregister.module.css';
+import { toast } from 'sonner';
 function RegisterComponent({actionCallback,setOnLoginComponent,Login} : {actionCallback: () => unknown,setOnLoginComponent: (value:boolean)=>void,Login: (token:string)=>void}) {
   
-	const [isAlumni, setIsAlumni] = useState(true);
-	const handleToggle = (isAlumniSelected: boolean) => {
-		setIsAlumni(isAlumniSelected);
-	  };
-
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
       event.preventDefault();
    
@@ -18,7 +14,6 @@ function RegisterComponent({actionCallback,setOnLoginComponent,Login} : {actionC
       const email=formData.get('email');
       const password=formData.get('password');
       const confirmPassword=formData.get('confirmPassword');
-      console.log(confirmPassword)
       // if (password === confirmPassword){
       //   console.table([email,password,confirmPassword,isAlumni]);
       // }
@@ -30,39 +25,16 @@ function RegisterComponent({actionCallback,setOnLoginComponent,Login} : {actionC
       // Write all logic before proceding to this try .... like username validation , email , pass and con pass
 
       try {
-        const response= await fetch("http://localhost:8080/api/v1/user/signup" , {
-          method:"POST",
-          headers: {
-            "Content-Type": "application/json", 
-          },
-          body:JSON.stringify({
-            username:username,
-            email:email,
-            password:password,
-            isAlumni:isAlumni,
+        const responseData= await SignupAPI({ username:username,email:email,password:password});
+        const token = responseData.token;
+        Login(token)
+        actionCallback()
+        toast.success('Signup Successful')
 
-          })
-          
-        })
-
-        const data=await response.json();
-        console.log(data)
-        if (response.ok){
-          const token = data.token;
-          Login(token)
-          actionCallback()
-          
-        }
-        else{
-          throw new Error(data.message)
-        }
       }
-      catch(e){
-        if (e instanceof Error){
-          console.log(e.message)
-        }else{
-         console.log("Error occured on hitting api ",e)}
-       
+      catch(error){
+        const ErrorResponse=handleApiError(error);
+        toast.error(ErrorResponse.message)
       }
     };
       
@@ -72,47 +44,20 @@ function RegisterComponent({actionCallback,setOnLoginComponent,Login} : {actionC
   return (
     // <div className={styles["mainwrapper"]}>
       <div className={styles["wrapper"]}>
-        <div className={styles["title-text"]}>
-          <div style={{
-                marginLeft: isAlumni ? "0" : "-50%",
-              }} className={`${styles["title"]} ${styles["alumni"]}`}>
-            Alumni Signup
+        
+          <div className={`${styles["title"]} flex flex-col items-center`}>
+            <img className='h-15 w-15' src="safespace.png" alt="" />
+            SafeSpace
           </div>
-          <div className={`${styles["title"]} ${styles["student"]}`}>
-            Student Signup
-          </div>
-        </div>
+
+     
         <div className={styles["form-container"]}>
-          <div className={styles["slide-controls"]}>
-            
-            
-            <button
-              onClick={() => handleToggle(true)}
-              className={`${styles["slide"]} ${styles["almuni"]} ${
-				isAlumni ? styles["active"] : styles["not-active"]
-			  }`}>
-              Alumni
-            </button>
-            <button
-			onClick={() => handleToggle(false)}
-              className={`${styles["slide"]} ${styles["student"]} ${
-				!isAlumni ? styles["active"] : styles["not-active"]
-			  }`}
-            >
-              Student
-            </button>
-            <div className={styles["slider-tab"]} style={{
-                left: isAlumni ? "0" : "50%",
-              }}
-></div>
-          </div>
+          
+
           <div className={styles["form-inner"]}>
           <form onSubmit={onSubmit} className={styles["signup"]}>
               <div className={styles["field"]}>
                 <input type="text" name='username' placeholder="Username" required />
-              </div>
-              <div className={styles["field"]}>
-                <input type="text" name='email' placeholder="Email Address" required />
               </div>
               <div className={styles["field"]}>
                 <input type="password" name='password' placeholder="Password" required />
@@ -126,11 +71,11 @@ function RegisterComponent({actionCallback,setOnLoginComponent,Login} : {actionC
                 />
               </div>
               <div className={`${styles["field"]} ${styles["btn"]}`}>
-                <div className={styles["btn-layer"]}></div>
+                <div className={`${styles["btn-layer"]} bg-gradient-to-r from-red-400 to-orange-400 `}></div>
                 <input type="submit" value="Signup" />
               </div>
               <div className={styles["signup-link"]}>
-                Already registered? <button onClick={()=> setOnLoginComponent(true)}><a className='cursor-pointer'>Login here!</a></button>
+                Already registered? <button onClick={(event)=> {setOnLoginComponent(true);event.preventDefault()}}><a className='cursor-pointer'>Login here!</a></button>
               </div>
             </form>
 

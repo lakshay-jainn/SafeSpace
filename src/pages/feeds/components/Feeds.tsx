@@ -1,15 +1,24 @@
 
 import useFetchFeeds from "@/api/hooks/useFetchFeeds";
 import { InitialCommentsResponse,InitialFeedsResponse } from "@/api/types/FeedsTypes";
-import { PostProps } from "@/protectedPages/feeds/components/SinglePost";
+import { PostProps } from "@/pages/feeds/components/SinglePost";
 import { SinglePost } from "./SinglePost";
 
-export default function Feeds() {
-  const [feeds,loading,error]=useFetchFeeds();
+export default function Feeds({fetchAgain} : {fetchAgain:boolean}) {
+
+  const [feeds,loading,error]=useFetchFeeds(fetchAgain);
+  
   if (!loading && error){
     console.error(error);
   }
   if(!loading && !error){
+
+    if (!feeds || feeds.posts.length===0){
+      return (
+        <div className="flex justify-center items-center h-96">
+          <h1 className="text-3xl font-bold text-gray-500">No posts to show</h1>
+          </div>)
+    }
     
 
   return (
