@@ -2,42 +2,62 @@ import useFetchSingleFeed from "@/api/hooks/useFetchSingleFeed";
 import { SinglePost } from "@/pages/feeds/components/SinglePost";
 import { PostProps } from "@/pages/feeds/components/SinglePost";
 import { InitialCommentsResponse } from "@/api/types/FeedsTypes";
-function SingleFeed({postId,setInitialComments} : {postId : (string | undefined),setInitialComments: any}){
+import Comments from "./Comments"
+import ScrollbarCss from "@/scrollbarCss/ScrollbarCss";
+
+function SingleFeed({postId} : {postId : (string | undefined)}){
     const [singleFeed,loading,error]=useFetchSingleFeed({postId});
+    
+    
+
     if(loading){
         return <div>Loading...</div>
     }
     if(error){
         return <div>{error}</div>
     }
+    if (!singleFeed){
+        return <div>Post not found</div>
+    }
     if (!loading && !error){
-        const post: PostProps={
+      
+
+      
+         const post ={
             id:singleFeed.id,
             author:{
               name:singleFeed.user.username ,
               avatar:singleFeed.user.profileImage,
-              role:singleFeed.user.role,
+    
             },
             timestamp:singleFeed.createdAt,
             image:singleFeed.content!=='' ? singleFeed.content : undefined,
             caption: singleFeed.caption ? singleFeed.caption : '',
             likes:singleFeed.likesCount,
+            commentsCount:singleFeed.commentCount,
             isLiked:singleFeed.isLiked,
-            comments:singleFeed.comments?.map((comment:Partial<InitialCommentsResponse>) => ({
+            comments:singleFeed.comments?.map((comment:InitialCommentsResponse) => ({
               id: comment.id,
               author: comment.user.username, 
               avatar: comment.user.profileImage,
               content: comment.comment,
-              timestamp: '  ', 
+              timestamp: new Date(comment.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }), 
               likes: comment.likesCount,
               isLiked: comment.isLiked
             })) || [],
   
   
     
+
           }       
-          setInitialComments(post.comments)
-          return( <SinglePost key={post.id} {...post} />)
+          
+          
+          return( 
+            <>
+          <SinglePost key={post.id} {...post} />
+          {<Comments initialComments={post.comments} post={post} />}
+          </>
+          )
 
     }
     

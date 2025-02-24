@@ -91,7 +91,7 @@ export default function CreatePost({setCreatePostModal = (value:boolean)=>{},set
       } = useDropzone({
         onDrop,
         maxFiles: 1,
-        maxSize: 1000000, // 1MB
+        maxSize: 5000000, // 1MB
         multiple: false,
         // Provide no‑op functions to satisfy the type requirements:
         onDragEnter: () => {},

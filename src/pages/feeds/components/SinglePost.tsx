@@ -30,14 +30,14 @@ export interface PostProps {
   author: {
     name: string
     avatar: string
-    role: string
   },
+  commentsCount:number
   timestamp: string,
   image?: string
   caption: string
   likes: number
   isLiked: boolean
-  comments: Comment[]
+  comments?: Comment[]
 }
 
 
@@ -54,6 +54,7 @@ export function SinglePost({
   likes: initialLikes,
   isLiked: initialIsLiked,
   comments: initialComments,
+  commentsCount: initialCommentsCount
 }: PostProps) {
   const location = useLocation()
   const navigate=useNavigate()
@@ -177,7 +178,7 @@ export function SinglePost({
 
                     <Button variant="ghost" size="icon" onClick={PostClick} className="hover:bg-inherit w-full h-full text-start cursor-pointer">
                       <MessageSquareText style={{height:"2rem",width:"2rem"}}  strokeWidth={1} className="" />
-                      <span className="text-lg font-semibold">80</span>
+                      <span className="text-lg font-semibold">{initialCommentsCount}</span>
                     </Button>
                 
                     <Button

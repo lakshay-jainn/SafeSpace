@@ -1,21 +1,16 @@
-import { UseFormReturn,useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod"
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormMessage,
-  } from "@/components/ui/form"
-import {memo,useState,useMemo} from 'react'
+import {memo,useState,useMemo,useEffect} from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Comment } from "@/pages/feeds/components/SinglePost";
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import {  Send, ThumbsUp } from "lucide-react"
+import AddCommentElement from "./CommentBtn";
+import {  ThumbsUp } from "lucide-react"
 import {z} from 'zod'
 import { AddComment } from "@/api/services/feedsService";
 import { FetchComments } from "@/api/services/feedsService";
+import { v4 as uuidv4 } from 'uuid';
+import { format } from "path";
 
 const messageSchema = z.object({
     text: z
@@ -28,7 +23,7 @@ const messageSchema = z.object({
 });
 
 
-type AddMessageValues = z.infer<typeof messageSchema>
+export type AddMessageValues = z.infer<typeof messageSchema>
 
 
 const CommentItem = memo(({ comment, onLike }: { comment: Comment; onLike: (id: string) => void }) => {
@@ -85,79 +80,42 @@ const CommentsList = memo(({ sortedComments, toggleCommentLike  }:
     });
   
   
-const AddCommentElement =  memo(({ form, handleAddComment  }: { form:  UseFormReturn<AddMessageValues>,handleAddComment: (event:any) => void }) => {
-          return (
-            <Form {...form}>
-                  <form className='w-full flex gap-5' onSubmit={form.handleSubmit(handleAddComment)}>
-                  
-                    
-                    <FormField
-                    control={form.control}
-                  
-                    name="text"
-                    render={({ field }) => (
-                      <FormItem className="grow">
-                  
-                        <FormControl className="w-full">
-                        <Input
-                        
-                      placeholder="Add a comment..."
-                      className="w-full"
-                      {...field}
-                      value={field.value || ''}
-                      
-                    />
-                        </FormControl>
-                  
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-  
-                    <Button size="icon" type="submit">
-                      <Send className="h-4 w-4" />
-                    </Button>
-                   
-                  
-                  </form>
-                  </Form>
-          );
-        });
-    
+
   
 
 
 
 
 
-        function Comments({initialComments,id}:{initialComments:any,id:any}) {
-            const [comments, setComments] = useState<Comment[]>(initialComments)
-            const [sortBy, setSortBy] = useState<"recent" | "likes">("recent")
-            const [skipComments, setSkipComments] = useState(0);
-            const [isCommentsExpanded, setIsCommentsExpanded] = useState(false)
+        function Comments({initialComments,post}:{initialComments:any,post:any}) {
+          
+          const [comments, setComments] = useState<Comment[]>(initialComments)
+          const [sortBy, setSortBy] = useState<"recent" | "likes">("recent")
+          const [skipComments, setSkipComments] = useState(0);
+          const [isCommentsExpanded, setIsCommentsExpanded] = useState(false)
 
-            const form = useForm<AddMessageValues>({
+          const form = useForm<AddMessageValues>({
                 resolver: zodResolver(messageSchema),
                 mode: "onSubmit",
                 reValidateMode: "onSubmit",
               });
 
-              
-            const loadMoreComments = async() => {
+
+          const loadMoreComments = async() => {
                   try{
                     setSkipComments((prev)=> prev+5)
-                    const responseData=await FetchComments({skip:skipComments+5,take:5,postId:id});
+                    const responseData=await FetchComments({skip:skipComments+5,take:5,postId:post.id});
                  
                     const CmmtsFromDb=responseData.comments;
-              
+                    
                     const newCommentObj = CmmtsFromDb.map((CmmtFromDb : any)=> (
                       {id:CmmtFromDb.id,
-                      author: (CmmtFromDb.user.name? CmmtFromDb.user.name : CmmtFromDb.user.username),
+                      author: CmmtFromDb.user.username,
                       avatar: CmmtFromDb.user.profileImage,
                       content: CmmtFromDb.comment,
                       likes : CmmtFromDb.likesCount,
                       isLiked:CmmtFromDb.isLiked,
-                      timestamp : '',}
+                      timestamp : new Date(CmmtFromDb.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),}
                     ));
               
               
@@ -195,29 +153,32 @@ const AddCommentElement =  memo(({ form, handleAddComment  }: { form:  UseFormRe
                     );
                   }, [comments, sortBy]); 
 
-
+          
             const handleAddComment = async (data:any) => {
                   
                   const newComment: string=data.text;
-              
-                      try{
-                      const responseData = await AddComment({content:newComment,postId:id})
-              
-                      const CmmtFromDb=responseData.post
-              
+                  const now=Date.now()
+                  const currentDate=new Date(now)
+                  const options : any = { year: 'numeric', month: 'long', day: 'numeric' };
+                  const formattedDate = currentDate.toLocaleDateString('en-US', options);
+                  
+
+                  try{
+                      const response = await AddComment({content:newComment,postId:post.id});
+                      const CommentFromDb = response.comment;
+                      
                       const newCommentObj={
-                        id:CmmtFromDb.id,
-                        author: (CmmtFromDb.user.name? CmmtFromDb.user.name : CmmtFromDb.user.username),
-                        avatar: CmmtFromDb.user.profileImage,
-                        content: CmmtFromDb.comment,
-                        likes : CmmtFromDb.likesCount,
+                        id:CommentFromDb.id,
+                        author: CommentFromDb.user.username,
+                        avatar: CommentFromDb.user.profileImage,
+                        content: newComment,
+                        likes : 0,
                         isLiked:false,
-                        timestamp : '',
+                        timestamp : formattedDate,
                       }
+                      
                       setComments([newCommentObj, ...comments])
                       form.reset();
-                  
-                    
                     }catch{
                       console.log('some error occured in adding comment')
                     } 
@@ -226,6 +187,7 @@ const AddCommentElement =  memo(({ form, handleAddComment  }: { form:  UseFormRe
                     
                 }
             
+              
             return (
                
                     <>
@@ -256,9 +218,9 @@ const AddCommentElement =  memo(({ form, handleAddComment  }: { form:  UseFormRe
                                 ): <p>No more Comments To show</p>}
                               </div>
                               </>
-                            )
+                            )}
             
-          }
+          
 
 
 export default Comments;

@@ -7,6 +7,7 @@ export interface InitialFeedsResponse{
     isLiked:boolean,
     comments:any,
     createdAt:string,
+    commentCount:number,
 
 }
 export interface InitialCommentsResponse {
@@ -16,4 +17,11 @@ export interface InitialCommentsResponse {
     user:any;
     likesCount:number,
     isLiked:boolean,
+    createdAt: Date
+}
+export interface InitialCommunitiesResponse{
+    id:string,
+    name:string,
+    // post: Partial<InitialFeedsResponse>[]
+
 }

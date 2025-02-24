@@ -64,7 +64,6 @@
 
 /* ... */
 
-
 @layer base {
   :root {
 
@@ -233,5 +232,16 @@
 ::-webkit-scrollbar-thumb{ 
   border-radius: 999999px;
   background-color: var(--color-orange-400);
+}
+/*
+  ---break---
+*/
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 

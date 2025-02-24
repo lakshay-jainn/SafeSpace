@@ -52,12 +52,12 @@ const NavSideBar = ({setSidebarModal  = (value:boolean) => {}}) => {
         </NavLink>
         {
           isLoggedIn ? (
-            <NavLink to="/feeds" className='flex justify-between items-center p-3 rounded-lg transition-colors text-white bg-gradient-to-r from-rose-400 to-red-500' onClick={()=>Logout()} data-navlink>
+            <NavLink to="/feeds" className='flex justify-between items-center p-3 rounded-lg transition-colors text-white bg-gradient-to-r from-rose-400 to-red-500' onClick={()=>{Logout()}} data-navlink>
             <span className="text-base">Logout</span>
             <LogOut className="w-5 h-5 " />
           </NavLink>
           ) : (
-            <NavLink to="/feeds" className='flex justify-between items-center p-3 rounded-lg transition-colors text-white bg-gradient-to-r from-[#28A745] to-[#17A2B8]' data-navlink>
+            <NavLink to="/feeds" className='flex justify-between items-center p-3 rounded-lg transition-colors text-white bg-gradient-to-r from-[#28A745] to-[#17A2B8]'  data-navlink>
             <span className="text-base">Login</span>
             <LogIn className="w-5 h-5 " />
           </NavLink>
