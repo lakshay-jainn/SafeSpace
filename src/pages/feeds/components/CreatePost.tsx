@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import {  useForm } from "react-hook-form"
-import { set, z } from "zod"
+import { z } from "zod"
 import { useState,useCallback,useRef } from "react"
 import { Button } from "@/components/ui/button"
 import {
@@ -12,6 +12,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import useGlobalAuth from "@/Auth/useGlobalAuth"
 import { createPost } from "@/api/services/feedsService"
 import { uploadImg } from "@/api/services/imageService"
 import { Input } from "@/components/ui/input"
@@ -42,7 +43,7 @@ const profileFormSchema = z
 
   
 export default function CreatePost({setCreatePostModal = (value:boolean)=>{},setFetchAgain} : {setCreatePostModal?:(value:boolean)=>void,setFetchAgain:(value: (newValue : boolean)=>boolean )=>void}){
-
+    const {handleProtectedAction,isLoggedIn} = useGlobalAuth();
     const [preview, setPreview] = useState<string | ArrayBuffer | null>('');
     const inputFileRef = useRef<HTMLInputElement | null>(null)
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -112,7 +113,10 @@ export default function CreatePost({setCreatePostModal = (value:boolean)=>{},set
 
     async function onSubmit(data : ProfileFormValues) {
             
-
+            if (!isLoggedIn) {
+              handleProtectedAction(()=>void(0));
+              return;
+            }
             
             const updatedFields: postUploadPayload = {};
             if (data.image && data.image.size !== 0){

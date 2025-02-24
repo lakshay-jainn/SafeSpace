@@ -10,7 +10,7 @@ export async function AddComment(data:any){
 
 export async function LikePost(data : any){
 
-    const response = await axiosClient.post('/post/like',data)
+    const response = await axiosClient.post('/post/like-post',data)
 
       return response.data;
 }

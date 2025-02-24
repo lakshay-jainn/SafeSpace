@@ -2,7 +2,7 @@ import useFetchSingleFeed from "@/api/hooks/useFetchSingleFeed";
 import { SinglePost } from "@/pages/feeds/components/SinglePost";
 import { PostProps } from "@/pages/feeds/components/SinglePost";
 import { InitialCommentsResponse } from "@/api/types/FeedsTypes";
-function SingleFeed({postId} : {postId : (string | undefined)}){
+function SingleFeed({postId,setInitialComments} : {postId : (string | undefined),setInitialComments: any}){
     const [singleFeed,loading,error]=useFetchSingleFeed({postId});
     if(loading){
         return <div>Loading...</div>
@@ -36,7 +36,7 @@ function SingleFeed({postId} : {postId : (string | undefined)}){
   
     
           }       
-  
+          setInitialComments(post.comments)
           return( <SinglePost key={post.id} {...post} />)
 
     }
