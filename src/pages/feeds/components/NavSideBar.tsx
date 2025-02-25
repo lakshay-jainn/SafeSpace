@@ -5,7 +5,7 @@ import { Home, Compass, Bell, Mail, User, Settings,LogOut,LogIn } from 'lucide-r
 import useGlobalAuth from '@/Auth/useGlobalAuth';
 import useFetchUserDetails from '@/api/hooks/useFetchUserDetails';
 import { InitialUserDetailsResponse } from '@/api/types/FeedsTypes';
-const NavSideBar = ({setSidebarModal }:{setSidebarModal:any}) => {
+const NavSideBar = ({setSidebarModal = () => {} }:{setSidebarModal?:any}) => {
   let userDetails : (Partial<InitialUserDetailsResponse>) = {};
   let loading;
   let error;
