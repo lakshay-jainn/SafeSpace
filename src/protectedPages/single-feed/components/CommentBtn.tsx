@@ -11,11 +11,19 @@ import { Send } from "lucide-react"
 import { UseFormReturn } from "react-hook-form"
 import { AddMessageValues } from "./Comments"
 import { memo } from "react"
+import { useRef } from "react"
+const AddCommentElement =  memo(({ form, handleAddComment  }: { form:  UseFormReturn<AddMessageValues>,handleAddComment: (event:any,clickedButton:string) => void }) => {
+  const buttonRef = useRef("");
 
-const AddCommentElement =  memo(({ form, handleAddComment  }: { form:  UseFormReturn<AddMessageValues>,handleAddComment: (event:any) => void }) => {
-          return (
+  const handleClick = (buttonName: string) => {
+        buttonRef.current = buttonName;
+    };
+  const onSubmit = (data: any) => {
+      handleAddComment(data, buttonRef.current);
+  };
+  return (
             <Form {...form}>
-                  <form className='w-full flex gap-5' onSubmit={form.handleSubmit(handleAddComment)}>
+                  <form className='w-full flex flex-col gap-5' onSubmit={form.handleSubmit(onSubmit)}>
                   
                     
                     <FormField
@@ -40,12 +48,18 @@ const AddCommentElement =  memo(({ form, handleAddComment  }: { form:  UseFormRe
                       </FormItem>
                     )}
                   />
-  
-                    <Button size="icon" type="submit">
+                    <div className="flex gap-2">
+                    <Button className="w-1/2 bg-gradient-to-r from-red-400 to-orange-500 rounded-full" size="icon" type="submit" onClick={() => handleClick("Comment")}>
+                    Comment
                       <Send className="h-4 w-4" />
                     </Button>
-                   
-                  
+                    <Button className="w-1/2 rounded-full bg-gradient-to-r from-[#28A745] to-[#17A2B8]" size="icon" type="submit" onClick={() => handleClick("Whisper")}>
+                    Whisper
+                      <Send className="h-4 w-4" />
+                    </Button>
+                    </div>
+
+                    
                   </form>
                   </Form>
           );

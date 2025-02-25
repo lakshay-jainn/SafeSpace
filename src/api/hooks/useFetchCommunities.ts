@@ -1,7 +1,6 @@
 
 import { useState,useEffect } from "react";
 import publicAxiosClient from "../axios/publicAxiosClient";
-import axiosClient from "../axios/axiosClient";
 import {InitialCommunitiesResponse } from "../types/FeedsTypes";
 import { handleApiError } from "../utils/apiUtils";
 export default function useFetchCommunities() {
@@ -12,7 +11,7 @@ export default function useFetchCommunities() {
     useEffect(()=>{
         const fetchCommunities = async() =>{
             try{
-                const response=await axiosClient.get('/community/communities')
+                const response=await publicAxiosClient.get('/community/communities')
                
                 const data=response.data;
 

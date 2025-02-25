@@ -53,10 +53,10 @@ function SingleFeed({postId} : {postId : (string | undefined)}){
           
           
           return( 
-            <>
+            <div className="p-5 flex flex-col gap-5">
           <SinglePost key={post.id} {...post} />
-          {<Comments initialComments={post.comments} post={post} />}
-          </>
+          <Comments initialComments={post.comments} post={post} />
+          </div>
           )
 
     }

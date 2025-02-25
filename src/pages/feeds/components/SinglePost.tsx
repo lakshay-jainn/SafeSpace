@@ -127,7 +127,7 @@ export function SinglePost({
     <>
     {/*max-w-[1095px]*/}
     {/* onDoubleClick={handleDoubleClick} onTouchEnd={handleTouchEnd} */}
-    <Card  className="w-full max-w-2xl mx-auto rounded-[2rem] gradient-border">
+    <Card  className="w-full mx-auto rounded-[2rem] gradient-border">
       <CardHeader className="flex flex-row items-center gap-4 border-b pb-4 space-y-0">
       
         <Avatar>

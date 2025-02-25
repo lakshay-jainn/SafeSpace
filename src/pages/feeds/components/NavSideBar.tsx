@@ -34,14 +34,14 @@ const NavSideBar = ({setSidebarModal  = (value:boolean) => {}}) => {
 
   return (
     <aside className=" min-h-screen bg-white border-gray-200 sticky top-0 p-6 z-10">
-      <div className="mb-2 text-center flex gap-3 items-center">
+      <div className=" text-center flex gap-3 items-center border-b-1">
         {/* Replace with your own logo */}
         <img src="https://res.cloudinary.com/dx4uiowkr/image/upload/v1740250460/logo/dfhejwjjz6u7acefnmsm.png" alt="SafeSpace" className="w-15 h-15" />
         <h1 className="text-2xl font-bold">SafeSpace</h1>
       </div>
       {isLoggedIn && userDetails && userDetails.id && (
-        <div className='flex gap-5'>
-          <img className='w-7 rounded-full h-7 mb-5' src={`${userDetails.profileImage}`} alt="" />
+        <div className='flex gap-5 p-3 border-b-1 mb-2'>
+          <img className='w-7 rounded-full h-7' src={`${userDetails.profileImage}`} alt="" />
           <p>{userDetails.username}</p>
         </div>
       )}

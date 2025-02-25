@@ -154,8 +154,13 @@ const CommentsList = memo(({ sortedComments, toggleCommentLike  }:
                   }, [comments, sortBy]); 
 
           
-            const handleAddComment = async (data:any) => {
-                  
+            const handleAddComment = async (data:any,clickButton : string) => {
+                  if (clickButton === "Whisper") {
+                    console.log("Whispering...")
+                  }
+                  else {
+                    console.log("Commentting...")
+                  }
                   const newComment: string=data.text;
                   const now=Date.now()
                   const currentDate=new Date(now)
@@ -190,10 +195,10 @@ const CommentsList = memo(({ sortedComments, toggleCommentLike  }:
               
             return (
                
-                    <>
+                    <div className="flex flex-col gap-5">
                     <AddCommentElement form={form} handleAddComment={handleAddComment} />
               
-                              <div className="px-10">
+                              <div className="">
                                 <div className="flex justify-between items-center mb-4">
                                   <div className="flex items-center gap-2">
                                   
@@ -217,7 +222,7 @@ const CommentsList = memo(({ sortedComments, toggleCommentLike  }:
                                   </Button>
                                 ): <p>No more Comments To show</p>}
                               </div>
-                              </>
+                              </div>
                             )}
             
           
