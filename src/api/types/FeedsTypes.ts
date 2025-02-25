@@ -22,6 +22,7 @@ export interface InitialCommentsResponse {
 export interface InitialCommunitiesResponse{
     id:string,
     name:string,
+    description:string,
     // post: Partial<InitialFeedsResponse>[]
 
 }

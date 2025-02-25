@@ -6,6 +6,7 @@ import { SinglePost } from "./SinglePost";
 import { FetchFeeds } from "@/api/services/feedsService";
 import useGlobalAuth from "@/Auth/useGlobalAuth";
 import { debounce } from 'lodash'
+import SkeletonCard from "@/components/ui/SkeletonCard";
 
 export default function Feeds({fetchAgain}:{fetchAgain:boolean}) {
   
@@ -83,7 +84,14 @@ export default function Feeds({fetchAgain}:{fetchAgain:boolean}) {
       }, [scrollLoading]);
 
 
-
+    if (loading){
+      <div className="container mx-auto py-2 space-y-8 relative">
+          <SkeletonCard hasImage={true} />  
+          <SkeletonCard hasImage={true} />
+          <SkeletonCard hasImage={true} />
+      </div>
+      
+    }
   if (!loading && error){
     console.error(error);
   }

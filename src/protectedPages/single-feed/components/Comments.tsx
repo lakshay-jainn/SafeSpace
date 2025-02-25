@@ -11,6 +11,8 @@ import { AddComment } from "@/api/services/feedsService";
 import { FetchComments } from "@/api/services/feedsService";
 import { v4 as uuidv4 } from 'uuid';
 import { format } from "path";
+import { handleApiError } from "@/api/utils/apiUtils";
+import { toast } from "sonner";
 
 const messageSchema = z.object({
     text: z
@@ -184,8 +186,10 @@ const CommentsList = memo(({ sortedComments, toggleCommentLike  }:
                       
                       setComments([newCommentObj, ...comments])
                       form.reset();
-                    }catch{
-                      console.log('some error occured in adding comment')
+                    }catch (error){
+                      const errorMessage=handleApiError(error)
+                      toast.error(errorMessage.message)
+                      
                     } 
               
                     

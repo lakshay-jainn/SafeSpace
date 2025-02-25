@@ -11,7 +11,6 @@ function RegisterComponent({actionCallback,setOnLoginComponent,Login} : {actionC
    
       const formData = new FormData(event.currentTarget);
       const username =formData.get('username');
-      const email=formData.get('email');
       const password=formData.get('password');
       const confirmPassword=formData.get('confirmPassword');
       // if (password === confirmPassword){
@@ -25,7 +24,7 @@ function RegisterComponent({actionCallback,setOnLoginComponent,Login} : {actionC
       // Write all logic before proceding to this try .... like username validation , email , pass and con pass
 
       try {
-        const responseData= await SignupAPI({ username:username,email:email,password:password});
+        const responseData= await SignupAPI({ username:username,password:password});
         const token = responseData.token;
         Login(token)
         actionCallback()

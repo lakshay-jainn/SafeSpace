@@ -149,7 +149,7 @@ export default function CreatePost({setCreatePostModal = (value:boolean)=>{},set
               if (error instanceof Error){
                 console.log(error.message);
               }
-              toast.error("An error occurred while updating the profile");
+              toast.error("An error occurred while Creating post");
         
               
             }

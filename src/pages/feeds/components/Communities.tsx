@@ -4,6 +4,7 @@ import {InitialCommunitiesResponse} from "@/api/types/FeedsTypes";
 import {memo} from 'react'
 const Communities = memo(() => {
     const [communities,loading,error]=useFetchCommunities();
+
     if(loading){
         return <div>Communities are loading</div>
     }

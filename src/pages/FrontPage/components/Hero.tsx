@@ -1,6 +1,8 @@
 import styles from './Hero.module.css'
 import { Button } from "./Button";
+import { useNavigate } from 'react-router-dom';
 export const Hero = () => {
+  const navigate=useNavigate()
   return <div className="relative bg-linear-to-b from-indigo-50 via-purple-50 to-white pt-24 pb-16 overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -left-4 top-1/4 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-blob" />
@@ -25,11 +27,14 @@ export const Hero = () => {
             protection.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button className="text-lg px-8 py-4 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all">
+            <Button onClick={()=>navigate('/feeds')} className="text-lg px-8 py-4 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all">
               Join Now
             </Button>
             <Button variant="secondary" className="text-lg px-8 py-4">
+              <a href="#features">
               Learn More
+              </a>
+              
             </Button>
           </div>
         </div>
