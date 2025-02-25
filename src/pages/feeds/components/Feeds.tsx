@@ -16,7 +16,7 @@ export default function Feeds({fetchAgain}:{fetchAgain:boolean}) {
   const [skipFeeds,setSkipFeeds]=useState(0);
   const [scrollLoading,setScrollLoading]=useState(false);
   const [page, setPage] = useState(1);
-  
+
 
   const handleScroll = () => {
     

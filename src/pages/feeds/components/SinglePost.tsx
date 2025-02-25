@@ -63,7 +63,7 @@ export function SinglePost({
   const [isLiked, setIsLiked] = useState(initialIsLiked)
   const [SuccessfullIsLike, setSuccessfullIsLike] = useState(initialIsLiked)
   const [pendingLike, setPendingLike] = useState<boolean | null>(null)
-
+  
   // const lastTouchTimeRef = useRef<number>(0);
   const isTextOnly = !image
 

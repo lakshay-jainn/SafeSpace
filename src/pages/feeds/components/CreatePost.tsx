@@ -20,7 +20,8 @@ import { useDropzone } from "react-dropzone";
 import { ImagePlus,CircleX } from "lucide-react";
 import { toast } from "sonner";
 import { postUploadPayload } from "@/api/types/profileDetailsTypes"
-
+import { handleApiError } from "@/api/utils/apiUtils"
+import { checkImageToxicity } from "@/api/services/imageService"
 const profileFormSchema = z
   .object({
     image: z.instanceof(File).optional(),
@@ -84,6 +85,7 @@ export default function CreatePost({setCreatePostModal = (value:boolean)=>{},set
       // some properties of upload functionality
       
       const {
+        acceptedFiles,
         getRootProps,
         getInputProps,
         isDragActive,
@@ -120,6 +122,21 @@ export default function CreatePost({setCreatePostModal = (value:boolean)=>{},set
             
             const updatedFields: postUploadPayload = {};
             if (data.image && data.image.size !== 0){
+              try{
+                console.log(data.image)
+                const response=await checkImageToxicity(acceptedFiles[0]);
+                // toast.success(response)
+                console.log(response)
+                if(response.label ==='QUESTIONABLE' || response.label === 'UNSAFE' || (response.label === 'SAFE' && response.confidence < 90)){
+                  toast.error(`Image is offensive or inappropriate. \n\n    Label: ${response.label} Confidence Level: ${Math.floor(response.confidence)}%`)
+                  return
+                }
+              } catch (error){
+                const errorMessage=handleApiError(error)
+                toast.error(errorMessage.message)
+                return;
+              }
+
               let profileImageUrl;
               try{
                 const profileImage=await uploadImg('posts',data.image);
@@ -145,11 +162,10 @@ export default function CreatePost({setCreatePostModal = (value:boolean)=>{},set
               toast.success("Post Created updated successfully");
               setCreatePostModal(false);
               setFetchAgain((prev : boolean) => !prev);
+
             } catch (error) {
-              if (error instanceof Error){
-                console.log(error.message);
-              }
-              toast.error("An error occurred while Creating post");
+              const errorMessage=handleApiError(error)
+              toast.error(errorMessage.message);
         
               
             }

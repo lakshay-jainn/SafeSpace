@@ -186,6 +186,9 @@ const CommentsList = memo(({ sortedComments, toggleCommentLike  }:
                       
                       setComments([newCommentObj, ...comments])
                       form.reset();
+                      toast.success("Your comment has been added and no toxicity detected!", {
+                        className: "bg-green-500 text-white font-bold",
+                      });
                     }catch (error){
                       const errorMessage=handleApiError(error)
                       toast.error(errorMessage.message)
