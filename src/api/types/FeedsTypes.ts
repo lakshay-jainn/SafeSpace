@@ -25,3 +25,8 @@ export interface InitialCommunitiesResponse{
     // post: Partial<InitialFeedsResponse>[]
 
 }
+export interface InitialUserDetailsResponse{
+    id:string,
+    username:string,
+    profileImage:string,
+}

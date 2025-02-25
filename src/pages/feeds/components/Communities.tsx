@@ -1,7 +1,8 @@
 import SingleCommunity from "./SingleCommunity";
 import useFetchCommunities from "@/api/hooks/useFetchCommunities";
 import {InitialCommunitiesResponse} from "@/api/types/FeedsTypes";
-function Communities(){
+import {memo} from 'react'
+const Communities = memo(() => {
     const [communities,loading,error]=useFetchCommunities();
     if(loading){
         return <div>Communities are loading</div>
@@ -12,7 +13,7 @@ function Communities(){
     if (!communities){
         return <div>No communities to show</div>
     }
-    console.log(communities)
+    
 
 
     return (
@@ -23,5 +24,5 @@ function Communities(){
         </div>
     )
 
-}
+})
 export default Communities;

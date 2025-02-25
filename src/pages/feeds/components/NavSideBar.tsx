@@ -3,9 +3,22 @@
 import { NavLink,useNavigate } from 'react-router-dom';
 import { Home, Compass, Bell, Mail, User, Settings,LogOut,LogIn } from 'lucide-react';
 import useGlobalAuth from '@/Auth/useGlobalAuth';
+import useFetchUserDetails from '@/api/hooks/useFetchUserDetails';
+import { useEffect } from 'react';
+import { InitialUserDetailsResponse } from '@/api/types/FeedsTypes';
 const NavSideBar = ({setSidebarModal  = (value:boolean) => {}}) => {
+  let userDetails : (Partial<InitialUserDetailsResponse>) = {};
+  let loading;
+  let error;
+
   const navigate = useNavigate();
   const { handleProtectedAction ,isLoggedIn,Logout} = useGlobalAuth();
+
+  if (isLoggedIn){
+    [userDetails,loading,error] = useFetchUserDetails();
+  }
+
+
   const handleNavItemClick = (event : any) => {
     const target = event.target.closest('[data-navlink]');
     if (!target) return;
@@ -14,6 +27,7 @@ const NavSideBar = ({setSidebarModal  = (value:boolean) => {}}) => {
     setSidebarModal(false)
     handleProtectedAction(() => navigate(href));
   }
+
   const navItemClass = ({ isActive }:{isActive: boolean }) =>
     `flex items-center p-3 rounded-lg transition-colors 
     ${isActive ? 'bg-gradient-to-r from-red-400 to-orange-400 text-white' : 'text-gray-700 hover:bg-gray-100'}`;
@@ -25,6 +39,12 @@ const NavSideBar = ({setSidebarModal  = (value:boolean) => {}}) => {
         <img src="https://res.cloudinary.com/dx4uiowkr/image/upload/v1740250460/logo/dfhejwjjz6u7acefnmsm.png" alt="SafeSpace" className="w-15 h-15" />
         <h1 className="text-2xl font-bold">SafeSpace</h1>
       </div>
+      {isLoggedIn && userDetails && userDetails.id && (
+        <div className='flex gap-5'>
+          <img src={`${userDetails.profileImage}`} alt="" />
+          <p>{userDetails.username}</p>
+        </div>
+      )}
       <nav className="flex flex-col space-y-4" onClickCapture={handleNavItemClick}>
         <NavLink to="/feeds" className={navItemClass} onClick={()=>setSidebarModal(false)}>
           <Home className="w-5 h-5 mr-3" />
