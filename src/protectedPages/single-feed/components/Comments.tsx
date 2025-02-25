@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod"
-import {memo,useState,useMemo,useEffect} from 'react'
+import {memo,useState,useMemo} from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Comment } from "@/pages/feeds/components/SinglePost";
 import { Button } from "@/components/ui/button"
@@ -9,8 +9,6 @@ import {  ThumbsUp } from "lucide-react"
 import {z} from 'zod'
 import { AddComment } from "@/api/services/feedsService";
 import { FetchComments } from "@/api/services/feedsService";
-import { v4 as uuidv4 } from 'uuid';
-import { format } from "path";
 import { handleApiError } from "@/api/utils/apiUtils";
 import { toast } from "sonner";
 

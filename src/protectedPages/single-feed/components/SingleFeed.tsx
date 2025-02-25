@@ -1,9 +1,8 @@
 import useFetchSingleFeed from "@/api/hooks/useFetchSingleFeed";
 import { SinglePost } from "@/pages/feeds/components/SinglePost";
-import { PostProps } from "@/pages/feeds/components/SinglePost";
 import { InitialCommentsResponse } from "@/api/types/FeedsTypes";
 import Comments from "./Comments"
-import ScrollbarCss from "@/scrollbarCss/ScrollbarCss";
+
 
 function SingleFeed({postId} : {postId : (string | undefined)}){
     const [singleFeed,loading,error]=useFetchSingleFeed({postId});

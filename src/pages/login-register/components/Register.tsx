@@ -12,7 +12,7 @@ function RegisterComponent({actionCallback,setOnLoginComponent,Login} : {actionC
       const formData = new FormData(event.currentTarget);
       const username =formData.get('username');
       const password=formData.get('password');
-      const confirmPassword=formData.get('confirmPassword');
+      // const confirmPassword=formData.get('confirmPassword');
       // if (password === confirmPassword){
       //   console.table([email,password,confirmPassword,isAlumni]);
       // }

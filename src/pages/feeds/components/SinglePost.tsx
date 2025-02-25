@@ -1,11 +1,11 @@
-import { useState,useMemo,useEffect } from "react"
+import { useState,useEffect } from "react"
 import { useLocation,useNavigate } from "react-router-dom"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card,  CardHeader } from "@/components/ui/card"
 // import { Separator } from "@/components/ui/separator"
 import { Heart,MessageSquareText } from "lucide-react"
-import { LikePost,AddComment,FetchComments } from "@/api/services/feedsService"
+import { LikePost } from "@/api/services/feedsService"
 import {toast} from 'sonner'
 
 
@@ -53,7 +53,6 @@ export function SinglePost({
   caption,
   likes: initialLikes,
   isLiked: initialIsLiked,
-  comments: initialComments,
   commentsCount: initialCommentsCount
 }: PostProps) {
   const location = useLocation()

@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -43,7 +42,7 @@ const profileFormSchema = z
   type ProfileFormValues = z.infer<typeof profileFormSchema>
 
   
-export default function CreatePost({setCreatePostModal = (value:boolean)=>{},setFetchAgain} : {setCreatePostModal?:(value:boolean)=>void,setFetchAgain:(value: (newValue : boolean)=>boolean )=>void}){
+export default function CreatePost({setCreatePostModal = ()=>{},setFetchAgain} : {setCreatePostModal?:(value:boolean)=>void,setFetchAgain:(value: (newValue : boolean)=>boolean )=>void}){
     const {handleProtectedAction,isLoggedIn} = useGlobalAuth();
     const [preview, setPreview] = useState<string | ArrayBuffer | null>('');
     const inputFileRef = useRef<HTMLInputElement | null>(null)
