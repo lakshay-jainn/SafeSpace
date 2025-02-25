@@ -10,7 +10,7 @@ export default function useFetchUserDetails() {
     useEffect(()=>{
         const fetchUserDetails = async() =>{
             try{
-                const response=await axiosClient.get('/community/communities')
+                const response=await axiosClient.get('/post/user')
                
                 const data=response.data;
 

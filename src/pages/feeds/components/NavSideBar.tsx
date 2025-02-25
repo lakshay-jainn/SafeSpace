@@ -41,7 +41,7 @@ const NavSideBar = ({setSidebarModal  = (value:boolean) => {}}) => {
       </div>
       {isLoggedIn && userDetails && userDetails.id && (
         <div className='flex gap-5'>
-          <img src={`${userDetails.profileImage}`} alt="" />
+          <img className='w-7 rounded-full h-7 mb-5' src={`${userDetails.profileImage}`} alt="" />
           <p>{userDetails.username}</p>
         </div>
       )}

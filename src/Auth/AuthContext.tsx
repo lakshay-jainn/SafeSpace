@@ -43,17 +43,14 @@ function AuthProvider({ children }: AuthProviderProps) {
 
 
   const Logout=()=>{
-      
       localStorage.removeItem("token")
-      setToken(false)
-      setIsLoggedIn(false)
       window.location.reload()
     }
   const Login = (token : string) => {
       localStorage.setItem("token",token)
-      setIsLoggedIn(true)
-      setToken(token)
-      closeLoginPopup();    
+      // setIsLoggedIn(true)
+      // setToken(token)
+      // closeLoginPopup();    
       window.location.reload()
       
     }
