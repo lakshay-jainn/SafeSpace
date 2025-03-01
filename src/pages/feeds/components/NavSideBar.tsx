@@ -3,20 +3,19 @@
 import { NavLink,useNavigate } from 'react-router-dom';
 import { Home, Compass, Bell, Mail, User, Settings,LogOut,LogIn } from 'lucide-react';
 import useGlobalAuth from '@/Auth/useGlobalAuth';
-import useFetchUserDetails from '@/api/hooks/useFetchUserDetails';
-import { InitialUserDetailsResponse } from '@/api/types/FeedsTypes';
+// import useFetchUserDetails from '@/api/hooks/useFetchUserDetails';
+// import { InitialUserDetailsResponse } from '@/api/types/FeedsTypes';
 const NavSideBar = ({setSidebarModal = () => {} }:{setSidebarModal?:any}) => {
-  let userDetails : (Partial<InitialUserDetailsResponse>) = {};
-  let loading;
-  let error;
+  // let loading;
+  // let error;
 
   const navigate = useNavigate();
-  const { handleProtectedAction ,isLoggedIn,Logout} = useGlobalAuth();
+  const { handleProtectedAction ,isLoggedIn,Logout,userDetails} = useGlobalAuth();
 
-  if (isLoggedIn){
-    [userDetails,loading,error] = useFetchUserDetails();
-    console.log(loading,error)
-  }
+  // if (isLoggedIn){
+  //   [userDetails,loading,error] = useFetchUserDetails();
+  //   console.log(loading,error)
+  // }
   
 
   const handleNavItemClick = (event : any) => {

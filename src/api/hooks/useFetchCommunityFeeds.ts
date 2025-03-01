@@ -36,6 +36,11 @@ export default function useFetchCommunityFeeds(communityId:(string | undefined),
         
         }
         fetchCommunityFeeds();
+        return () => {
+            setCommunityFeeds(null);
+            setLoading(true);
+            setError(false);    
+        }
         
     },[fetchAgain,communityId])
 

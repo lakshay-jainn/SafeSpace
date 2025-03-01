@@ -16,14 +16,13 @@ export default function useFetchProfile(): [profileDetailsResponse | undefined,b
             try{
             const res=await axiosClient.get(profileFetchUrl)
 
-
             setPersonalDetails(res.data)
             }
 
             catch(error : any){
                 const errorResponse=handleApiError(error);
                 setError(errorResponse.message)
-            } 
+            }
             finally{
                 setLoading(false);
             }

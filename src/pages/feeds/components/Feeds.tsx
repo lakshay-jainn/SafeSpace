@@ -7,9 +7,10 @@ import { FetchFeeds } from "@/api/services/feedsService";
 import useGlobalAuth from "@/Auth/useGlobalAuth";
 import { debounce } from 'lodash'
 import SkeletonCard from "@/components/ui/SkeletonCard";
+import { useOutletContext } from "react-router-dom";
 
-export default function Feeds({fetchAgain}:{fetchAgain:boolean}) {
-  
+export default function Feeds() {
+  const {fetchAgain} = useOutletContext<{fetchAgain:boolean}>()!;
   const {isLoggedIn}=useGlobalAuth();
   const [feeds,setFeeds,loading,error]=useFetchFeeds({fetchAgain});
   const [feedsExpanded,setFeedsExpanded]=useState(false);
@@ -85,11 +86,11 @@ export default function Feeds({fetchAgain}:{fetchAgain:boolean}) {
 
 
     if (loading){
-      <div className="container mx-auto py-2 space-y-8 relative">
+        return(<div className="container mx-auto py-2 space-y-8 relative">
           <SkeletonCard hasImage={true} />  
           <SkeletonCard hasImage={true} />
           <SkeletonCard hasImage={true} />
-      </div>
+      </div>)
       
     }
   if (!loading && error){

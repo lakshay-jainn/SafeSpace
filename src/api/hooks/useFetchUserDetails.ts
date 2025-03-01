@@ -13,7 +13,7 @@ export default function useFetchUserDetails() {
                 const response=await axiosClient.get('/post/user')
                
                 const data=response.data;
-
+                
                 setUserDetails(data);
             } catch(error: any) {
                 const ErrorResponse = handleApiError(error)

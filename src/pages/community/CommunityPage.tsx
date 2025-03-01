@@ -1,6 +1,6 @@
 
 import { useParams } from "react-router-dom"
-import CommunityFeeds from "./components/CommunityFeeds";
+import CommunityFeeds from "../feeds/components/CommunityFeeds";
 import { useState } from "react";
 import CreatePost from "../feeds/components/CreatePost";
 import Communities from "../feeds/components/Communities";
@@ -16,7 +16,7 @@ function CommunityPage(){
                 <CreatePost setFetchAgain={setFetchCommunityFeedsAgain} />
             </div>
            
-            <CommunityFeeds communityId={communityId} fetchAgain={FetchCommunityFeedsAgain} />
+            <CommunityFeeds />
         </div>
         {/*  sticky communities tab  */}
         <div className="hidden md:block flex-[0.30] sticky top-0 h-screen p-5">

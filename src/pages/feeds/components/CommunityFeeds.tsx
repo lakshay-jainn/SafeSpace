@@ -7,15 +7,18 @@ import { FetchCommunityFeeds } from "@/api/services/feedsService";
 import useGlobalAuth from "@/Auth/useGlobalAuth";
 import { debounce } from 'lodash'
 import SkeletonCard from "@/components/ui/SkeletonCard";
+import { useOutletContext } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-function CommunityFeeds({communityId,fetchAgain}:{communityId:(string | undefined),fetchAgain:boolean}){
+function CommunityFeeds(){
+    const {communityId} = useParams();
+    const {fetchAgain} = useOutletContext<{fetchAgain:boolean}>()!;
     const [communityFeeds,setCommunityFeeds,loading,error] = useFetchCommunityFeeds(communityId,fetchAgain);
     const {isLoggedIn}=useGlobalAuth();
     const [feedsExpanded,setFeedsExpanded]=useState(false);
     const [skipFeeds,setSkipFeeds]=useState(0);
     const [scrollLoading,setScrollLoading]=useState(false);
     const [page, setPage] = useState(1);
-
 
     const handleScroll = () => {
         if (document.body.scrollHeight - 50 < window.scrollY + window.innerHeight) {
@@ -77,11 +80,11 @@ function CommunityFeeds({communityId,fetchAgain}:{communityId:(string | undefine
 
 
     if (loading){
-      <div className="container mx-auto py-2 space-y-8 relative">
+        return (<div className="container mx-auto py-2 space-y-8 relative">
           <SkeletonCard hasImage={true} />  
           <SkeletonCard hasImage={true} />
           <SkeletonCard hasImage={true} />
-      </div>
+      </div>)
       
     }
     if (!loading && error){

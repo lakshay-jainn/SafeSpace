@@ -3,6 +3,7 @@ import ScrollbarCss from "@/scrollbarCss/ScrollbarCss"
 import CreatePost from "./components/CreatePost"
 import { useOutletContext } from 'react-router-dom';
 import Communities from "./components/Communities";
+import { Outlet } from "react-router-dom";
 export default function FeedsPage() {
     const {fetchAgain,setFetchAgain} = useOutletContext<{fetchAgain:boolean,setFetchAgain:(value: (newValue : boolean)=>boolean )=>{}}>()!;
     return (
@@ -12,8 +13,8 @@ export default function FeedsPage() {
             <div className="hidden md:block">
                 <CreatePost setFetchAgain={setFetchAgain} />
             </div>
-           
-            <Feeds fetchAgain={fetchAgain} />
+            <Outlet context={{fetchAgain,setFetchAgain}} />
+            
         </div>
         {/*  sticky communities tab  */}
         <div className="hidden md:block flex-[0.30] sticky top-0 h-screen p-5">
