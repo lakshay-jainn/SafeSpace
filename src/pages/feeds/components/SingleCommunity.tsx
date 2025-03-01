@@ -1,7 +1,10 @@
 import { Card,CardContent,CardDescription,CardTitle  } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge"
-function SingleCommunity({id,name,description}: {id:string,name:string,description:string}){
+import { NavLink } from "react-router-dom";
+function SingleCommunity({id,name,description,navItemClass}: {id:string,name:string,description:string,navItemClass:({isActive}:{isActive:boolean})=>string}) {
+
     return (
+        <NavLink className={navItemClass} to={`/community/${id}`}> 
         <Card className="w-full drop-shadow-lg">
           <div className="hidden">
             {id}
@@ -17,6 +20,7 @@ function SingleCommunity({id,name,description}: {id:string,name:string,descripti
             </div>
           </CardContent>
         </Card>
+        </NavLink>
     )
 }
 export default SingleCommunity;

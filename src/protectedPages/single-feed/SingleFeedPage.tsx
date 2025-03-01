@@ -8,7 +8,6 @@ function SingleFeedPage(){
     return (
         <div className="w-full flex-1 pt-5 px-5">
             <SingleFeed postId={postId} />
-            
         </div>
         
     )

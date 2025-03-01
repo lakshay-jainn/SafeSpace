@@ -2,7 +2,7 @@ import axios from 'axios';
 import { logout } from './AuthBridge';
 
 const axiosClient = axios.create({
-  baseURL: 'http://13.233.199.220/api/v1',
+  baseURL: 'http://localhost:8080/api/v1',
 });
 
 axiosClient.interceptors.request.use((config) => {
