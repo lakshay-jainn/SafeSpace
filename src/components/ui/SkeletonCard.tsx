@@ -6,8 +6,8 @@ interface SkeletonCardProps {
 
 export default function SkeletonCard({ hasImage = false }: SkeletonCardProps) {
   return (
-    <div className="w-full max-w-2xl p-4 rounded-3xl bg-gradient-to-r from-rose-200 to-orange-200">
-      <div className="bg-white rounded-2xl p-6 space-y-6">
+    <div className="w-full rounded-3xl">
+      <div className="bg-white rounded-3xl p-6 space-y-6 gradient-border">
         {/* Header */}
         <div className="flex items-center gap-3">
           <Skeleton className="h-12 w-12 rounded-full" />

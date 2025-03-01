@@ -2,7 +2,7 @@ import useFetchSingleFeed from "@/api/hooks/useFetchSingleFeed";
 import { SinglePost } from "@/pages/feeds/components/SinglePost";
 import { InitialCommentsResponse } from "@/api/types/FeedsTypes";
 import Comments from "./Comments"
-
+import SkeletonCard from "@/components/ui/SkeletonCard";
 
 function SingleFeed({postId} : {postId : (string | undefined)}){
     const [singleFeed,loading,error]=useFetchSingleFeed({postId});
@@ -10,7 +10,9 @@ function SingleFeed({postId} : {postId : (string | undefined)}){
     
 
     if(loading){
-        return <div>Loading...</div>
+        return(<div className="container mx-auto py-2 space-y-8 relative">
+                  <SkeletonCard hasImage={true} />  
+              </div>)
     }
     if(error){
         return <div>{error}</div>
