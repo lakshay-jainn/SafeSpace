@@ -42,7 +42,7 @@ function AuthProvider({ children }: AuthProviderProps) {
                 setUserDetails(data);
             } catch(error: any) {
                 const ErrorResponse = handleApiError(error)
-                toast.error(ErrorResponse.message)
+                // toast.error(ErrorResponse.message)
             }
         
         }

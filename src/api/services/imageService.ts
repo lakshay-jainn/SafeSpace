@@ -40,7 +40,7 @@ export async function uploadImg(ToFolder:string ,image:any){
 export async function checkImageToxicity(file:File){
   const formData = new FormData();
   formData.append("file", file);
-  const response = await axios.post("https://a506-103-225-190-165.ngrok-free.app/api/v1/img_toxicity", formData,{
+  const response = await axios.post("https://dd42-2401-4900-4121-247c-c417-e731-308f-7b31.ngrok-free.app/api/v1/img_toxicity", formData,{
     headers: {
         'Content-Type': 'multipart/form-data',
     },
