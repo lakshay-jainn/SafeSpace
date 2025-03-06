@@ -23,7 +23,18 @@ function SingleFeed({postId} : {postId : (string | undefined)}){
     if (!loading && !error){
       
 
-      
+        const comments = singleFeed.comments?.map((comment:InitialCommentsResponse) => ({
+          id: comment.id,
+          author: comment.user.username, 
+          avatar: comment.user.profileImage,
+          content: comment.comment,
+          timestamp: new Date(comment.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }), 
+          likes: comment.likesCount,
+          isLiked: comment.isLiked,
+          type:'comment'
+          
+        })) || []
+        
          const post ={
             id:singleFeed.id,
             author:{
@@ -37,26 +48,16 @@ function SingleFeed({postId} : {postId : (string | undefined)}){
             likes:singleFeed.likesCount,
             commentsCount:singleFeed.commentCount,
             isLiked:singleFeed.isLiked,
-            comments:singleFeed.comments?.map((comment:InitialCommentsResponse) => ({
-              id: comment.id,
-              author: comment.user.username, 
-              avatar: comment.user.profileImage,
-              content: comment.comment,
-              timestamp: new Date(comment.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }), 
-              likes: comment.likesCount,
-              isLiked: comment.isLiked
-            })) || [],
-  
-  
-    
-
+            comments:comments.filter((comment:any)=>comment.type==='comment') || [],
+            whisperComments:comments.filter((comment:any)=>comment.type==='whisper') || []
           }       
+          console.log(comments,post)
           
           
           return( 
             <div className="p-5 flex flex-col gap-5">
           <SinglePost key={post.id} {...post} />
-          <Comments initialComments={post.comments} post={post} />
+          <Comments initialWhisperComments={post.whisperComments} initialComments={post.comments} post={post} />
           </div>
           )
 

@@ -10,6 +10,11 @@ export interface InitialFeedsResponse{
     commentCount:number,
 
 }
+
+export interface InitialWhisperCommentsResponse{
+    
+
+}
 export interface InitialCommentsResponse {
     id:string,
     comment:string,

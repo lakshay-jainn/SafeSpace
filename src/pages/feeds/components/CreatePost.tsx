@@ -161,6 +161,8 @@ export default function CreatePost({setCreatePostModal = ()=>{},setFetchAgain} :
               toast.success("Post Created updated successfully");
               setCreatePostModal(false);
               setFetchAgain((prev : boolean) => !prev);
+              form.reset();
+              setPreview(null);
 
             } catch (error) {
               const errorMessage=handleApiError(error)

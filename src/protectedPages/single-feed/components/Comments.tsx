@@ -87,12 +87,17 @@ const CommentsList = memo(({ sortedComments, toggleCommentLike  }:
 
 
 
-        function Comments({initialComments,post}:{initialComments:any,post:any}) {
+        function Comments({initialComments,initialWhisperComments,post}:{initialComments:any,initialWhisperComments:any,post:any}) {
           
           const [comments, setComments] = useState<Comment[]>(initialComments)
           const [sortBy, setSortBy] = useState<"recent" | "likes">("recent")
           const [skipComments, setSkipComments] = useState(0);
           const [isCommentsExpanded, setIsCommentsExpanded] = useState(false)
+          const [whisperComments, setWhisperComments] = useState(initialWhisperComments)
+          const [skipWhisperComments, setSkipWhisperComments] = useState(0);
+          const [whisperSortBy, setWhisperSortBy] = useState<"recent" | "likes">("recent")
+          const [isWhisperCommentsExpanded, setIsWhisperCommentsExpanded] = useState(false)
+
 
           const form = useForm<AddMessageValues>({
                 resolver: zodResolver(messageSchema),
@@ -100,6 +105,39 @@ const CommentsList = memo(({ sortedComments, toggleCommentLike  }:
                 reValidateMode: "onSubmit",
               });
 
+              const loadMoreWhisperComments = async() => {
+                try{
+                  setSkipWhisperComments((prev)=> prev+5)
+                  const responseData=await FetchComments({skip:skipComments+5,take:5,postId:post.id});
+               
+                  const CmmtsFromDb=responseData.comments;
+                  
+                  const newCommentObj = CmmtsFromDb.map((CmmtFromDb : any)=> (
+                    {id:CmmtFromDb.id,
+                    author: CmmtFromDb.user.username,
+                    avatar: CmmtFromDb.user.profileImage,
+                    content: CmmtFromDb.comment,
+                    likes : CmmtFromDb.likesCount,
+                    isLiked:CmmtFromDb.isLiked,
+                    timestamp : new Date(CmmtFromDb.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),}
+                  ));
+            
+            
+                  const TotalCommts=[...whisperComments,...newCommentObj]
+                  const uniqueComments = [...new Map(TotalCommts.map(cmmts => [cmmts.id, cmmts])).values()];
+                 
+                  
+                  setWhisperComments([...uniqueComments])
+                  
+                  
+                  if (newCommentObj.length===0) {
+                    setIsWhisperCommentsExpanded(true)
+                  }
+                }catch{
+            
+                }
+                
+              }
 
           const loadMoreComments = async() => {
                   try{
@@ -115,7 +153,7 @@ const CommentsList = memo(({ sortedComments, toggleCommentLike  }:
                       content: CmmtFromDb.comment,
                       likes : CmmtFromDb.likesCount,
                       isLiked:CmmtFromDb.isLiked,
-                      timestamp : new Date(CmmtFromDb.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),}
+                      timestamp : new Date(CmmtFromDb.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                     ));
               
               
@@ -134,6 +172,17 @@ const CommentsList = memo(({ sortedComments, toggleCommentLike  }:
                   }
                   
                 }
+
+            const toggleWhisperCommentLike = (commentId: string) => {
+                  setWhisperComments(
+                    whisperComments.map((comment : any) =>
+                      comment.id === commentId
+                        ? { ...comment, likes: comment.isLiked ? comment.likes - 1 : comment.likes + 1, isLiked: !comment.isLiked }
+                        : comment,
+                    ),
+                  )
+                }
+
             const toggleCommentLike = (commentId: string) => {
                     setComments(
                       comments.map((comment) =>
@@ -144,7 +193,14 @@ const CommentsList = memo(({ sortedComments, toggleCommentLike  }:
                     )
                   }
                 
-                
+            const sortedWhisperComments = useMemo(() => {
+                    return [...whisperComments].sort((a, b) => 
+                      whisperSortBy === "likes" 
+                        ? b.likes - a.likes 
+                        : new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+                    );
+                  }, [whisperComments, whisperSortBy]); 
+
             const sortedComments = useMemo(() => {
                     return [...comments].sort((a, b) => 
                       sortBy === "likes" 
@@ -202,8 +258,33 @@ const CommentsList = memo(({ sortedComments, toggleCommentLike  }:
                
                     <div className="flex flex-col gap-5">
                     <AddCommentElement form={form} handleAddComment={handleAddComment} />
-              
+                          {/* <div className="">
+                                
+                                <div className="flex justify-between items-center mb-4">
+                                  <div className="flex items-center gap-2">
+                                  
+                                    <h3 className="text-lg font-semibold">Whisper Comments </h3>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <Button variant="ghost" size="sm" onClick={() => setWhisperSortBy("recent")}>
+                                      Recent
+                                    </Button>
+                                    <Button variant="ghost" size="sm" onClick={() => setWhisperSortBy("likes")}>
+                                      Top
+                                    </Button>
+                                  </div>
+                                </div>
+                                <div className="space-y-4">
+                                  <CommentsList toggleCommentLike={toggleWhisperCommentLike} sortedComments={sortedWhisperComments} />
+                                </div>
+                                {!isWhisperCommentsExpanded ? (
+                                  <Button variant="outline" className="w-full mt-4" onClick={loadMoreWhisperComments}>
+                                    Load more Whisper comments
+                                  </Button>
+                                ): <p>No more Whisper Comments To show</p>}
+                              </div> */}
                               <div className="">
+                                
                                 <div className="flex justify-between items-center mb-4">
                                   <div className="flex items-center gap-2">
                                   
